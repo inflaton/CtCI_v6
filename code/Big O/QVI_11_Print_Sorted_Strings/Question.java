@@ -2,7 +2,7 @@ package QVI_11_Print_Sorted_Strings;
 
 public class Question {
 
-  public static int numChars = 26;
+  public static final int numChars = 26;
 
   public static void printSortedStrings(int remaining) {
     printSortedStrings(remaining, "");
@@ -28,6 +28,7 @@ public class Question {
       int curr = ithLetter(s.charAt(i));
       if (prev > curr) {
         isInOrder = false;
+        break;
       }
     }
     return isInOrder;
@@ -38,6 +39,10 @@ public class Question {
   }
 
   public static void main(String[] args) {
-    printSortedStrings(5);
+    int n = 5;
+    if (args.length > 0) {
+      n = Integer.parseInt(args[0]);
+    }
+    printSortedStrings(n);
   }
 }

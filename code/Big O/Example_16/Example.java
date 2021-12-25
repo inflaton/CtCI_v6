@@ -17,6 +17,10 @@ public class Example {
   }
 
   public static void main(String[] args) {
-    powersOf2(4);
+    int n = 4;
+    if (args.length > 0) {
+      n = Integer.parseInt(args[0]);
+    }
+    powersOf2(n);
   }
 }
