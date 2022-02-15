@@ -23,24 +23,25 @@ public class Solution { // DO NOT MODIFY THE LIST. IT IS READ ONLY
         return mid;
       }
 
+      boolean goLeft = true;
       if (midValue > leftValue && midValue < rightValue) { // no kink
         if (B > midValue) {
-          l = mid + 1;
-        } else {
-          r = mid;
+          goLeft = false;
         }
       } else if (midValue > leftValue) { // kink at right
         if (B > midValue || B < leftValue) {
-          l = mid + 1;
-        } else {
-          r = mid;
+          goLeft = false;
         }
       } else { // kink at left
-        if (B > rightValue || B < midValue) {
-          r = mid;
-        } else {
-          l = mid + 1;
+        if (B < rightValue && B > midValue) {
+          goLeft = false;
         }
+      }
+
+      if (goLeft) {
+        r = mid;
+      } else {
+        l = mid + 1;
       }
     }
     return -1;
