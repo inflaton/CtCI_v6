@@ -42,7 +42,6 @@ public class Solution {
     // split list and partition recurse
     ListNode pivotPrev = partition(start, end);
 
-    // System.out.println("pivotPrev: " + pivotPrev);
     if (pivotPrev == null) {
       return;
     }
@@ -50,7 +49,7 @@ public class Solution {
     sort(start, pivotPrev);
 
     ListNode rightStart = pivotPrev.next;
-    if (start != pivotPrev && rightStart != null) {
+    if (start != pivotPrev && rightStart != null && rightStart != end) {
       rightStart = rightStart.next;
     }
 
@@ -58,63 +57,26 @@ public class Solution {
   }
 
   private ListNode partition(ListNode start, ListNode end) {
-    // System.out.println("start: " + start);
-    // System.out.println("end: " + end);
     if (start == end || start == null || end == null) {
       return start;
     }
 
     ListNode pivotPrev = start;
-    ListNode i = start.next;
-    ListNode j = null;
+    ListNode curr = start;
+    int pivot = end.val;
 
-    int v = start.val;
-    while (true) {
-
-      // find item on lo to swap
-      while (i != null && i.val < v) {
-        if (i == end || i == j) {
-          break;
-        }
-        i = i.next;
-      }
-
-      // System.out.println("i: " + i);
-      if (i == null) {
-        break;
-      }
-
-      // find item on hi to swap
-      int crossed = 0;
-      ListNode last = start;
-      ListNode curr = start.next;
-      while (curr != null) {
-        if (v >= curr.val) {
-          j = curr;
-          pivotPrev = last;
-          if (crossed > 0) {
-            crossed++;
-          }
-        }
-        if (curr == i) {
-          crossed = 1;
-        }
-        last = curr;
+    while (start != end) {
+      if (start.val < pivot) {
+        // keep tracks of last modified item
+        pivotPrev = curr;
+        swap(curr, start);
         curr = curr.next;
       }
 
-      // System.out.println("j: " + j);
-      // System.out.println("crossed: " + crossed);
-
-      // check if pointers cross
-      if (crossed == 1) {
-        break;
-      }
-
-      swap(i, j);
+      start = start.next;
     }
 
-    swap(start, j);
+    swap(end, curr);
     return pivotPrev;
   }
 
@@ -127,16 +89,7 @@ public class Solution {
   }
 
   public static void main(String[] args) {
-    ListNode a = new ListNode(1);
-    ListNode b = new ListNode(3);
-    ListNode c = new ListNode(2);
-    a.next = b;
-    b.next = c;
-    System.out.println("a: " + a);
-    ListNode ans = new Solution().sortList(a);
-    System.out.println("ans: " + a);
-
-    int[] array = {19, 31, 26, 98, 67, 100, 2, 24, 6};
+    int[] array = {1, 3, 2};
     runTestCase(array);
 
     array = new int[] {19, 31, 26, 98, 67, 100, 2, 24, 6, 37, 69, 11, 16, 61, 23};
