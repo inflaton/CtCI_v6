@@ -81,7 +81,7 @@ public class Solution {
   }
 
   private void swap(ListNode i, ListNode j) {
-    if (i != null && j != null) {
+    if (i != j) {
       int temp = i.val;
       i.val = j.val;
       j.val = temp;
