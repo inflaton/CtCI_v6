@@ -26,7 +26,13 @@ public class Solution {
     String[] path = new String[length];
     findPalindrome(a, 0, length, 0, path, pq);
 
-    return new ArrayList<>(pq);
+    ArrayList<ArrayList<String>> ans = new ArrayList<>();
+    while (!pq.isEmpty()) {
+      ans.add(pq.remove());
+    }
+    // the below line doesn't follow sorted order
+    //    pq.forEach(e -> ans.add(e));
+    return ans;
   }
 
   private void findPalindrome(
