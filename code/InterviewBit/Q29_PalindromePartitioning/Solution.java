@@ -9,32 +9,24 @@ public class Solution {
   public ArrayList<ArrayList<String>> partition(String a) {
     PriorityQueue<ArrayList<String>> pq =
         new PriorityQueue<>(
-            new Comparator<ArrayList<String>>() {
-
-              @Override
-              public int compare(ArrayList<String> a1, ArrayList<String> a2) {
-                int length = Math.min(a1.size(), a2.size());
-                for (int i = 0; i < length; i++) {
-                  if (a1.get(i).length() < a2.get(i).length()) {
-                    return -1;
-                  }
-                  if (a1.get(i).length() > a2.get(i).length()) {
-                    return +1;
-                  }
+            (a1, a2) -> {
+              int length = Math.min(a1.size(), a2.size());
+              for (int i = 0; i < length; i++) {
+                if (a1.get(i).length() < a2.get(i).length()) {
+                  return -1;
                 }
-                return 0;
+                if (a1.get(i).length() > a2.get(i).length()) {
+                  return +1;
+                }
               }
+              return 0;
             });
 
     int length = a.length();
     String[] path = new String[length];
     findPalindrome(a, 0, length, 0, path, pq);
 
-    ArrayList<ArrayList<String>> ans = new ArrayList<>();
-    while (!pq.isEmpty()) {
-      ans.add(pq.remove());
-    }
-    return ans;
+    return new ArrayList<>(pq);
   }
 
   private void findPalindrome(
@@ -45,10 +37,7 @@ public class Solution {
       String[] path,
       PriorityQueue<ArrayList<String>> priorityQueue) {
     if (start == a.length() && depth > 0) {
-      ArrayList<String> arrayList = new ArrayList<>();
-      for (int i = 0; i < depth; i++) {
-        arrayList.add(path[i]);
-      }
+      ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(path).subList(0, depth));
       priorityQueue.add(arrayList);
     }
 
