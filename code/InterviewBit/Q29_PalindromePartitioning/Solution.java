@@ -2,13 +2,12 @@ package Q29_PalindromePartitioning;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.util.TreeSet;
 
 public class Solution {
   public ArrayList<ArrayList<String>> partition(String a) {
-    PriorityQueue<ArrayList<String>> pq =
-        new PriorityQueue<>(
+    TreeSet<ArrayList<String>> ans =
+        new TreeSet<>(
             (a1, a2) -> {
               int length = Math.min(a1.size(), a2.size());
               for (int i = 0; i < length; i++) {
@@ -24,15 +23,9 @@ public class Solution {
 
     int length = a.length();
     String[] path = new String[length];
-    findPalindrome(a, 0, length, 0, path, pq);
+    findPalindrome(a, 0, length, 0, path, ans);
 
-    ArrayList<ArrayList<String>> ans = new ArrayList<>();
-    while (!pq.isEmpty()) {
-      ans.add(pq.remove());
-    }
-    // the below line doesn't follow sorted order
-    //    pq.forEach(e -> ans.add(e));
-    return ans;
+    return new ArrayList<>(ans);
   }
 
   private void findPalindrome(
@@ -41,10 +34,10 @@ public class Solution {
       int maxLength,
       int depth,
       String[] path,
-      PriorityQueue<ArrayList<String>> priorityQueue) {
+      TreeSet<ArrayList<String>> ans) {
     if (start == a.length() && depth > 0) {
       ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(path).subList(0, depth));
-      priorityQueue.add(arrayList);
+      ans.add(arrayList);
     }
 
     int length = Math.min(maxLength, a.length() - start);
@@ -52,7 +45,7 @@ public class Solution {
       String palindrome = getPalindrome(a, start, length);
       if (palindrome != null) {
         path[depth] = palindrome;
-        findPalindrome(a, start + length, maxLength, depth + 1, path, priorityQueue);
+        findPalindrome(a, start + length, maxLength, depth + 1, path, ans);
       }
       length--;
     }
