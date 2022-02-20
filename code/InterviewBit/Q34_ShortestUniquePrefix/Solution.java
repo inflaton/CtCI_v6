@@ -71,25 +71,22 @@ public class Solution {
   }
 
   private String findPrefix(TrieNode root, String s) {
-    int len = findPrefixLength(root, s, 0);
+    int len = findPrefixLength(root, s, 0, 0);
     return s.substring(0, len);
   }
 
-  private int findPrefixLength(TrieNode node, String s, int i) {
+  private int findPrefixLength(TrieNode node, String s, int i, int lastBranchingIndex) {
     if (i == s.length()) {
-      return i;
+      return Math.min(lastBranchingIndex + 1, i);
     }
-
-    System.out.println("i: " + i + ", node: " + node);
-    if (node.next.size() > 1) {
-      return i + 1;
-    }
-
     char ch = s.charAt(i);
     TrieNode nextNode = node.next.get(ch);
-    System.out.println("i: " + i + ", node: " + node);
 
-    return findPrefixLength(nextNode, s, i + 1);
+    if (node.isWord() || node.next.size() >= 2) {
+      lastBranchingIndex = i;
+    }
+
+    return findPrefixLength(nextNode, s, i + 1, lastBranchingIndex);
   }
 
   public static void main(String[] args) {
@@ -97,9 +94,86 @@ public class Solution {
     String[] expected = {"z", "dog", "du", "dov"};
     runTestCase(array, expected);
 
+    String[] array1 = {"zebra"};
+    String[] expected1 = {"z"};
+    runTestCase(array1, expected1);
+
     String[] array2 = {"bearcat", "bert"};
     String[] expected2 = {"bea", "ber"};
     runTestCase(array2, expected2);
+
+    String[] array3 = {"lrbbmqb", "cd", "r", "owkk"};
+    String[] expected3 = {"l", "c", "r", "o"};
+    runTestCase(array3, expected3);
+
+    String[] array4 = {"zebra", "dog", "duck", "dove", "doggy"};
+    String[] expected4 = {"z", "dog", "du", "dov", "dogg"};
+    runTestCase(array4, expected4);
+
+    String[] array5 = {
+      "qzgdixrpddzplcrwnqwqecyjyibfjykmjfqwltvzkqtpvolp",
+      "ckcyufdqmlglimklfzktgygdttnh",
+      "vpf",
+      "fbrpzlkvshwywshtdg",
+      "babc",
+      "bkkxcvgumonmwvytbytnuqhmfjaqtgn",
+      "cwkuzyamnerphfmwevhwlezohye",
+      "hbrcewjxvceziftiqtntfsrpt",
+      "gtiznorvonzjfeacgamayapwlmbzitzszhzkosvnknberbltl",
+      "ggdgpljfisyltmmfvhybljvkypcflsaqevcijcyrgmq",
+      "rzniaxakholawoydvchveigttxwpukzjfhx",
+      "rtspfttotafsngqvoijxuvqbztvaalsehzxbshnrvbyk",
+      "qlrzzfmlvyoshiktodnsjjpqplciklzqrxloqxru",
+      "ygjtyz",
+      "eizmeainxslwhhjwslqendjvxjyg",
+      "rveuvphknqtsdtwxcktmwwwsdthzmlmbhjkmouhpbqurqfxgql",
+      "jmwsomowsjvpv",
+      "zn",
+      "silhhdkb",
+      "xqgrgedpzchrgefeukmcow",
+      "eabc",
+      "nwhpiiduxdnnlbnmyjyssbsococdzcuunkrfduvoua",
+      "hhcyvmlkzaajpfpyljtyjjpyntsef",
+      "iswjutenuycpbcnmhfuqmmidmvknyxmywegm",
+      "unodvuzygvguxtrdsdfz",
+      "ssmeluodjgdgzfmrazvndtaurdkugsbdpawxitivdubbqeonyc",
+      "egxfjkklrfkraoheucsvpiteqrswgkaaaohxxzhqjtkqa",
+      "hkwberbpmglbjipnujywogwczlkyrdejaqufowbig",
+      "snjniegvdvotugocedktcbbu",
+      "nxorix",
+      "bbdfrzuqsyrfqghoyqevcuanuujszitaoaowsxygl",
+      "fbwzddoznrvjqeyqignpitruijvyllsibobjltusryp",
+      "nvybsfrxtlfmpdidtyozoolzslgdgowijat",
+      "lvjzscizrkupmsoxftumyxifyunxucubvkfctkqlroqgz",
+      "vjwzizppvsomflvioemy",
+      "nphfjtbnwedtubynsbirepgcxfgsf",
+      "mhvpmymkdohetty",
+      "csibbeaxniwjkfvabnrllkmaglythkglauzgkeu",
+      "yrpaeurdvexqlwgakdtbihmfrjijanxkhrqdllecyhbsuxnl",
+      "tmjcnyybwsjmajbwtuhkki",
+      "vytgaufpjlxiwbnzhybsxfmumbhkjqm",
+      "abmyulbrglwstjkoxbczkjhvhsgzvwiixxaobhfsopqneb",
+      "flcooetjizolqrmsxphqdgz",
+      "mqhoggvrvjqrpmxb",
+      "kkfgzzxjegsyovdrmwcjavpmshojzxaxnbiztkfomzdhujdmcy",
+      "dqteqjalgqgsomon",
+      "breqqzzpwqlihdnvudvlzn",
+      "hbaokxvc",
+      "lykfhxbldylqqewdnjzrlbskqgfvnqlfvobeyolyy",
+      "vviwhxfpbuiujlolnjldgvwxljboayp",
+      "otdzjxxrschmw",
+      "veliumzpnoieipogwilaswntywuegd",
+      "yethsrznlzrffmwdgxaigmxpyvyaqga",
+      "ltodtlgzcyvfiykmkllfb",
+      "xqyhvizqmamjzlvvgoiflt"
+    };
+    String[] expected5 = {
+      "qz", "ck", "vp", "fbr", "ba", "bk", "cw", "hbr", "gt", "gg", "rz", "rt", "ql", "yg", "ei",
+      "rv", "j", "z", "si", "xqg", "ea", "nw", "hh", "i", "u", "ss", "eg", "hk", "sn", "nx", "bb",
+      "fbw", "nv", "lv", "vj", "np", "mh", "cs", "yr", "t", "vy", "a", "fl", "mq", "k", "d", "br",
+      "hba", "ly", "vv", "o", "ve", "ye", "lt", "xqy"
+    };
+    runTestCase(array5, expected5);
   }
 
   private static void runTestCase(String[] array, String[] expectedArray) {
@@ -109,8 +183,17 @@ public class Solution {
     System.out.println("result: " + result);
     ArrayList<String> expected = new ArrayList<>(Arrays.asList(expectedArray));
     if (!result.equals(expected)) {
-      //      throw new AssertionError("result: " + result + " does not equal to expected: " +
-      // expected);
+      for (int i = 0; i < expectedArray.length; i++) {
+        if (!expectedArray[i].equals(result.get(i))) {
+          throw new AssertionError(
+              "result["
+                  + i
+                  + "]: "
+                  + result.get(i)
+                  + " does not equal to expected: "
+                  + expectedArray[i]);
+        }
+      }
     }
   }
 }
