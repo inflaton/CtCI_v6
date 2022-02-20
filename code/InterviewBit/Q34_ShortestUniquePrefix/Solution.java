@@ -9,17 +9,8 @@ public class Solution {
   private static final int R = 256;
 
   private static class TrieNode {
-    HashMap<Character, TrieNode> next;
+    HashMap<Character, TrieNode> next = new HashMap<>();
     String word;
-
-    TrieNode() {
-      this(null);
-    }
-
-    TrieNode(String word) {
-      this.word = word;
-      this.next = new HashMap<>();
-    }
 
     public boolean isWord() {
       return this.word != null;
