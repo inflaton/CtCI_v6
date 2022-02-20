@@ -54,19 +54,16 @@ public class Solution {
   }
 
   private TrieNode add(TrieNode node, String s, int i) {
-    if (i == s.length()) {
-      if (node == null) {
-        return new TrieNode(s);
-      }
-      node.word = s;
-    }
-
     if (node == null) {
       node = new TrieNode();
     }
-    char ch = s.charAt(i);
-    TrieNode nextNode = node.next.get(ch);
-    node.next.put(ch, add(nextNode, s, i + 1));
+    if (i == s.length()) {
+      node.word = s;
+    } else {
+      char ch = s.charAt(i);
+      TrieNode nextNode = node.next.get(ch);
+      node.next.put(ch, add(nextNode, s, i + 1));
+    }
     return node;
   }
 
@@ -106,8 +103,8 @@ public class Solution {
     String[] expected3 = {"l", "c", "r", "o"};
     runTestCase(array3, expected3);
 
-    String[] array4 = {"zebra", "dog", "duck", "dove", "doggy"};
-    String[] expected4 = {"z", "dog", "du", "dov", "dogg"};
+    String[] array4 = {"zebra", "doggy", "duck", "dove", "dog"};
+    String[] expected4 = {"z", "dogg", "du", "dov", "dog"};
     runTestCase(array4, expected4);
 
     String[] array5 = {
