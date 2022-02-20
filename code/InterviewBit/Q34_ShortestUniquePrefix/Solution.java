@@ -3,6 +3,7 @@ package Q34_ShortestUniquePrefix;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class Solution {
   private static final int R = 256;
@@ -31,16 +32,18 @@ public class Solution {
           + next.size()
           + "]="
           + next
-          + (word == null ? "" : ", word='" + word + '\'' + '}');
+          + (word == null ? "" : ", word='" + word + '\'')
+          + '}';
     }
   }
 
   public ArrayList<String> prefix(ArrayList<String> A) {
     ArrayList<String> ans = new ArrayList<>();
-    TrieNode root = new TrieNode();
+    TrieNode root = null;
     for (String s : A) {
-      add(root, s);
+      root = addKey(root, s, 0);
     }
+    // System.out.println(root);
 
     for (String s : A) {
       String prefix = findPrefix(root, s);
@@ -49,11 +52,7 @@ public class Solution {
     return ans;
   }
 
-  private void add(TrieNode root, String s) {
-    add(root, s, 0);
-  }
-
-  private TrieNode add(TrieNode node, String s, int i) {
+  private TrieNode addKey(TrieNode node, String s, int i) {
     if (node == null) {
       node = new TrieNode();
     }
@@ -62,7 +61,7 @@ public class Solution {
     } else {
       char ch = s.charAt(i);
       TrieNode nextNode = node.next.get(ch);
-      node.next.put(ch, add(nextNode, s, i + 1));
+      node.next.put(ch, addKey(nextNode, s, i + 1));
     }
     return node;
   }
@@ -74,7 +73,7 @@ public class Solution {
 
   private int findPrefixLength(TrieNode node, String s, int i, int lastBranchingIndex) {
     if (i == s.length()) {
-      return Math.min(lastBranchingIndex + 1, i);
+      return lastBranchingIndex + 1;
     }
     char ch = s.charAt(i);
     TrieNode nextNode = node.next.get(ch);
