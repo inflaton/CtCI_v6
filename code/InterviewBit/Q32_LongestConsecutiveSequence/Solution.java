@@ -25,7 +25,6 @@ public class Solution {
   public int longestConsecutiveBruteForce(final List<Integer> A) {
     TreeSet<Integer> treeSet = new TreeSet<>(A);
     int size = treeSet.size();
-    //    System.out.println("size: " + size);
     if (size < 2) {
       return size;
     }
@@ -37,25 +36,19 @@ public class Solution {
 
     for (Integer i : treeSet) {
       counter++;
-
-      if (seqLen == 0) {
-        seqLen = 1;
-      } else {
-        boolean inSeq = i == lastInt + 1;
-        if (inSeq) {
-          seqLen += 1;
-        }
-        if (!inSeq || counter == treeSet.size()) {
-          if (seqLen > maxLen) {
-            maxLen = seqLen;
-          }
-          seqLen = 0;
-        }
-      }
-      //      System.out.println(
-      //          "lastInt: " + lastInt + ", i: " + i + ", seqLen: " + seqLen + ", maxLen: " +
-      // maxLen);
+      boolean inSeq = counter > 1 && i == lastInt + 1;
       lastInt = i;
+
+      if (inSeq) {
+        seqLen += 1;
+      }
+      if (!inSeq || counter == treeSet.size()) {
+        if (seqLen > maxLen) {
+          maxLen = seqLen;
+        }
+
+        seqLen = 1;
+      }
     }
 
     return maxLen;
