@@ -3,6 +3,81 @@ package Q35_Inversions;
 import java.util.*;
 
 public class Solution {
+  // Using Trie
+  static class Node {
+    int count = 1;
+    Node left;
+    Node right;
+  }
+
+  // Insert element in trie
+  private int insertElement(Node root, int num, int ans) {
+    // Converting the number into binary form
+    for (int i = 63; i >= 0; i--) {
+      // Checking if the i-th  bit ios set or not
+      int a = (num & (1 << i));
+
+      // If the bit is 1
+      if (a != 0) {
+        // if the bit is 1 that means
+        // we have to go to the right
+        // but we also checks if left
+        // pointer exists i.e there is
+        // at least a number smaller than
+        // the current number already in
+        // the trie we add that count
+        // to ans
+        if (root.left != null) {
+          ans += root.left.count;
+        }
+
+        // If right pointer is not null
+        // we just iterate to that
+        // position and increment the count
+        if (root.right != null) {
+          root = root.right;
+          root.count += 1;
+        }
+
+        // If right is null we add a new
+        // node over there and initialize
+        // the count with 1
+        else {
+          root.right = new Node();
+          root = root.right;
+        }
+      }
+
+      // if the bit is 0
+      else {
+        // We have to iterate to left,
+        // we first check if left
+        // exists? if yes then change
+        // the root and the count
+        if (root.left != null) {
+          root = root.left;
+          root.count++;
+        }
+        // otherwise we create
+        // the left node
+        else {
+          root.left = new Node();
+          root = root.left;
+        }
+      }
+    }
+
+    return ans;
+  }
+
+  public int countInversions(ArrayList<Integer> A) {
+    int ans = 0;
+    Node head = new Node();
+    for (int i = A.size() - 1; i >= 0; i--) {
+      ans = insertElement(head, A.get(i), ans);
+    }
+    return ans;
+  }
 
   // Heapsort + Bisection
   static class Pair {
@@ -28,7 +103,7 @@ public class Solution {
     }
   }
 
-  public int countInversions(ArrayList<Integer> A) {
+  public int countInversionsHeapsortBisection(ArrayList<Integer> A) {
     PriorityQueue<Pair> pq =
         new PriorityQueue<>(Comparator.comparing(Pair::getElement).thenComparing(Pair::getIndex));
 
@@ -127,55 +202,6 @@ public class Solution {
     }
     int[] b = Arrays.copyOf(a, a.length);
     return count(a, b, aux, 0, a.length - 1);
-  }
-
-  // attempt #2
-  static class Node {
-    HashSet<Integer> indexSet = new HashSet<>();
-    Node next;
-
-    @Override
-    public String toString() {
-      return "Node{" + "indexSet=" + indexSet + ", next=" + next + '}';
-    }
-  }
-
-  public int countInversionsAttempt2(ArrayList<Integer> A) {
-    int count = 0;
-    TreeMap<Integer, Node> map = new TreeMap<>();
-    for (int i = 0; i < A.size(); i++) {
-      int value = A.get(i);
-      Node node = map.get(value);
-      if (node == null) {
-        node = new Node();
-        map.put(value, node);
-      }
-      node.indexSet.add(i);
-    }
-
-    Node curr = null;
-    for (int key : map.keySet()) {
-      Node node = map.get(key);
-      if (curr != null) {
-        curr.next = node;
-      }
-      curr = node;
-    }
-
-    for (int i = 0; i < A.size(); i++) {
-      int value = A.get(i);
-      Node node = map.get(value);
-      while (node.next != null) {
-        for (int index : node.next.indexSet) {
-          if (index < i) {
-            count++;
-          }
-        }
-        node = node.next;
-      }
-    }
-
-    return count;
   }
 
   public int countInversionsBruteForce(ArrayList<Integer> A) {
