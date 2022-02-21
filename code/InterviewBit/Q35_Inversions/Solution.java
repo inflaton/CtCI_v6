@@ -1,17 +1,18 @@
 package Q35_Inversions;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class Solution {
   // Using Trie
   static class Node {
-    int count = 1;
+    long count = 1;
     Node left;
     Node right;
   }
 
   // Insert element in trie
-  private int insertElement(Node root, int num, int ans) {
+  private long insertElement(Node root, int num, long ans) {
     // Converting the number into binary form
     for (int i = 63; i >= 0; i--) {
       // Checking if the i-th  bit ios set or not
@@ -70,11 +71,15 @@ public class Solution {
     return ans;
   }
 
-  public int countInversions(ArrayList<Integer> A) {
-    int ans = 0;
+  public long countInversionsUsingTrie(ArrayList<Integer> A) {
+    return countInversionsUsingTrie(toIntArray(A));
+  }
+
+  public long countInversionsUsingTrie(int[] a) {
+    long ans = 0;
     Node head = new Node();
-    for (int i = A.size() - 1; i >= 0; i--) {
-      ans = insertElement(head, A.get(i), ans);
+    for (int i = a.length - 1; i >= 0; i--) {
+      ans = insertElement(head, a[i], ans);
     }
     return ans;
   }
@@ -103,17 +108,21 @@ public class Solution {
     }
   }
 
-  public int countInversionsHeapsortBisection(ArrayList<Integer> A) {
+  public long countInversionsHeapsortBisection(ArrayList<Integer> A) {
+    return countInversionsHeapsortBisection(toIntArray(A));
+  }
+
+  public long countInversionsHeapsortBisection(int[] a) {
     PriorityQueue<Pair> pq =
         new PriorityQueue<>(Comparator.comparing(Pair::getElement).thenComparing(Pair::getIndex));
 
     int i;
-    for (i = 0; i < A.size(); i++) {
-      pq.add(new Pair(i, A.get(i)));
+    for (i = 0; i < a.length; i++) {
+      pq.add(new Pair(i, a[i]));
     }
 
-    int count = 0;
-    int[] sortedIndices = new int[A.size()];
+    long ans = 0;
+    int[] sortedIndices = new int[a.length];
     int length = 0;
 
     while (!pq.isEmpty()) {
@@ -128,7 +137,7 @@ public class Solution {
 
       // i can represent how many elements on the left
       // i - y can find how many bigger numbers on the left
-      count += i - y;
+      ans += i - y;
 
       if (y < length) {
         System.arraycopy(sortedIndices, y, sortedIndices, y + 1, length - y);
@@ -137,7 +146,7 @@ public class Solution {
       length++;
     }
 
-    return count;
+    return ans;
   }
 
   private int bisect(int[] sortedArray, int length, int v) {
@@ -155,8 +164,8 @@ public class Solution {
   }
 
   // merge and count
-  private static int merge(int[] a, int[] aux, int lo, int mid, int hi) {
-    int inversions = 0;
+  private static long merge(int[] a, int[] aux, int lo, int mid, int hi) {
+    long inversions = 0;
 
     // copy to aux[]
     if (hi + 1 - lo >= 0) {
@@ -182,38 +191,51 @@ public class Solution {
 
   // return the number of inversions in the subarray b[lo..hi]
   // side effect b[lo..hi] is rearranged in ascending order
-  private static int count(int[] a, int[] b, int[] aux, int lo, int hi) {
-    int inversions = 0;
+  private static long count(int[] a, int[] b, int[] aux, int lo, int hi) {
+    long ans = 0;
     if (hi <= lo) {
       return 0;
     }
     int mid = lo + (hi - lo) / 2;
-    inversions += count(a, b, aux, lo, mid);
-    inversions += count(a, b, aux, mid + 1, hi);
-    inversions += merge(b, aux, lo, mid, hi);
-    return inversions;
+    ans += count(a, b, aux, lo, mid);
+    ans += count(a, b, aux, mid + 1, hi);
+    ans += merge(b, aux, lo, mid, hi);
+    return ans;
   }
 
-  public int countInversionsMergeSort(ArrayList<Integer> A) {
-    int[] aux = new int[A.size()];
+  // best performance - merge sort
+  public long countInversions(ArrayList<Integer> A) {
+    return countInversions(toIntArray(A));
+  }
+
+  private int[] toIntArray(ArrayList<Integer> A) {
     int[] a = new int[A.size()];
     for (int i = 0; i < A.size(); i++) {
       a[i] = A.get(i);
     }
+    return a;
+  }
+
+  public long countInversions(int[] a) {
+    int[] aux = new int[a.length];
     int[] b = Arrays.copyOf(a, a.length);
     return count(a, b, aux, 0, a.length - 1);
   }
 
-  public int countInversionsBruteForce(ArrayList<Integer> A) {
-    int count = 0;
-    for (int i = 0; i < A.size(); i++) {
-      for (int j = i + 1; j < A.size(); j++) {
-        if (A.get(i) > A.get(j)) {
-          count++;
+  public long countInversionsBruteForce(ArrayList<Integer> A) {
+    return countInversionsBruteForce(toIntArray(A));
+  }
+
+  public long countInversionsBruteForce(int[] a) {
+    long ans = 0;
+    for (int i = 0; i < a.length; i++) {
+      for (int j = i + 1; j < a.length; j++) {
+        if (a[i] > a[j]) {
+          ans++;
         }
       }
     }
-    return count;
+    return ans;
   }
 
   public static void main(String[] args) {
@@ -230,10 +252,10 @@ public class Solution {
     runTestCase(s2, 290);
   }
 
-  private static void runTestCase(Integer[] s, int expected) {
+  private static void runTestCase(Integer[] s, long expected) {
     Solution solution = new Solution();
     System.out.println("input: " + Arrays.toString(s));
-    int result = solution.countInversions(new ArrayList<>(Arrays.asList(s)));
+    long result = solution.countInversions(new ArrayList<>(Arrays.asList(s)));
     System.out.println("result: " + result);
     if (result != expected) {
       throw new AssertionError("result: " + result + " does not equal to expected: " + expected);
