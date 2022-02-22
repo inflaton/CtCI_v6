@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 public class Solution {
-  private static final int NIL = -1;
 
   public int numDistinct(String A, String B) {
     if (A.length() < B.length()) {
@@ -13,30 +12,31 @@ public class Solution {
     }
     int[][] dp = new int[A.length() + 1][B.length() + 1];
     for (int[] d : dp) {
-      Arrays.fill(d, NIL);
+      Arrays.fill(d, -1);
     }
     return solve(A, B, A.length(), B.length(), dp);
   }
 
   public static int solve(String s, String t, int sLen, int tLen, int[][] dp) {
-    // we have traversed t and found all char so count 1 subsequence for that
-    if (tLen == 0) {
-      return 1;
-    }
-    // we have traversed whole s and still not found all t chars so 0
-    if (sLen == 0) {
-      return 0;
-    }
+    if (dp[sLen][tLen] < 0) {
+      // we have traversed t and found all char so count 1 subsequence for that
+      if (tLen == 0) {
+        return 1;
+      }
 
-    if (dp[sLen][tLen] == NIL) {
-      if (s.charAt(sLen - 1) != t.charAt(tLen - 1)) {
-        // if last char not equal then exclude that char from s and look again
-        dp[sLen][tLen] = solve(s, t, sLen - 1, tLen, dp);
-      } else {
-        // if both char matches then add selection and not selection
-        dp[sLen][tLen] = solve(s, t, sLen - 1, tLen - 1, dp) + solve(s, t, sLen - 1, tLen, dp);
+      // we have traversed whole s and still not found all t chars so 0
+      if (sLen == 0) {
+        return 0;
+      }
+
+      dp[sLen][tLen] = solve(s, t, sLen - 1, tLen, dp);
+
+      // if both char matches then add selection and not selection
+      if (s.charAt(sLen - 1) == t.charAt(tLen - 1)) {
+        dp[sLen][tLen] += solve(s, t, sLen - 1, tLen - 1, dp);
       }
     }
+
     return dp[sLen][tLen];
   }
 
@@ -52,13 +52,15 @@ public class Solution {
       for (int j = 0; j <= tLen; j++) {
         if (j == 0) {
           dp[i][j] = 1;
-        } else if (s.charAt(i - 1) != t.charAt(j - 1)) {
-          dp[i][j] = dp[i - 1][j];
         } else {
-          dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+          dp[i][j] = dp[i - 1][j];
+          if (s.charAt(i - 1) == t.charAt(j - 1)) {
+            dp[i][j] += dp[i - 1][j - 1];
+          }
         }
       }
     }
+
     return dp[sLen][tLen];
   }
 
