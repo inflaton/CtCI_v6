@@ -40,6 +40,28 @@ public class Solution {
     return dp[sLen][tLen];
   }
 
+  public int numDistinctNonRecursive(String s, String t) {
+    int sLen = s.length();
+    int tLen = t.length();
+    if (sLen < tLen) {
+      return 0;
+    }
+
+    int[][] dp = new int[sLen + 1][tLen + 1];
+    for (int i = 1; i <= sLen; i++) {
+      for (int j = 0; j <= tLen; j++) {
+        if (j == 0) {
+          dp[i][j] = 1;
+        } else if (s.charAt(i - 1) != t.charAt(j - 1)) {
+          dp[i][j] = dp[i - 1][j];
+        } else {
+          dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+        }
+      }
+    }
+    return dp[sLen][tLen];
+  }
+
   // my own failed attempt
   static class Path {
     int[] indexPath;
@@ -167,7 +189,7 @@ public class Solution {
     if (result != expected) {
       throw new AssertionError("result: " + result + " does not equal to expected: " + expected);
     }
-    result = solution.numDistinctOwnAttempt(a, b);
-    System.out.println("my result: " + result);
+    result = solution.numDistinctNonRecursive(a, b);
+    System.out.println("numDistinctNonRecursive result: " + result);
   }
 }
