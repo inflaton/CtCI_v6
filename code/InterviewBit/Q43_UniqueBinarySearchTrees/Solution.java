@@ -81,15 +81,25 @@ public class Solution {
     A = 5;
     expected = 42;
     runTestCase(A, expected);
+
+    A = 10;
+    expected = 16796;
+    runTestCase(A, expected);
+
+    A = 12;
+    expected = 208012;
+    runTestCase(A, expected);
   }
 
   private static void runTestCase(int a, int expected) {
     Solution solution = new Solution();
     System.out.println("a: " + a);
     ArrayList<TreeNode> result = solution.generateTrees(a);
-    System.out.println("result: " + result);
-    for (TreeNode node : result) {
-      node.print();
+    if (a < 5) {
+      System.out.println("result: " + result);
+      for (TreeNode node : result) {
+        node.print();
+      }
     }
     if (result.size() != expected) {
       throw new AssertionError(
