@@ -28,24 +28,21 @@ public class Solution {
   }
 
   private void cloneAndAdd(TreeNode node, int val, ArrayList<TreeNode> ans) {
-    TreeNode newNode = cloneTree(node);
-    TreeNode curr = newNode;
-    int level = 0;
-    while (curr.right != null) {
-      level++;
-      curr = curr.right;
-    }
-    curr.right = new TreeNode(val);
-    ans.add(newNode);
+    int level = Integer.MAX_VALUE;
 
     while (level > 0) {
-      newNode = cloneTree(node);
-      curr = newNode;
+      TreeNode newNode = cloneTree(node);
+      TreeNode curr = newNode;
       TreeNode prev = null;
       for (int i = 0; i < level; i++) {
         prev = curr;
         curr = curr.right;
+        if (curr == null) {
+          level = i + 1;
+          break;
+        }
       }
+
       TreeNode newRightNode = new TreeNode(val);
       prev.right = newRightNode;
       newRightNode.left = curr;
