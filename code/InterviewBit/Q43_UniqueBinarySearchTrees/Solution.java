@@ -1,7 +1,5 @@
 package Q43_UniqueBinarySearchTrees;
 
-import Q7_04_Parking_Lot.Level;
-
 import java.util.ArrayList;
 
 public class Solution {
@@ -29,7 +27,7 @@ public class Solution {
     return ans;
   }
 
-  private TreeNode cloneAndAdd(TreeNode node, int val, ArrayList<TreeNode> ans) {
+  private void cloneAndAdd(TreeNode node, int val, ArrayList<TreeNode> ans) {
     TreeNode newNode = cloneTree(node);
     TreeNode curr = newNode;
     int level = 0;
@@ -55,7 +53,6 @@ public class Solution {
 
       level--;
     }
-    return newNode;
   }
 
   private TreeNode cloneTree(TreeNode node) {
@@ -82,8 +79,8 @@ public class Solution {
     runTestCase(A, expected);
 
     A = 5;
-    expected = 16;
-    //    runTestCase(A, expected);
+    expected = 42;
+    runTestCase(A, expected);
   }
 
   private static void runTestCase(int a, int expected) {
