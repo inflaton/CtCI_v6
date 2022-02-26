@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TreeNode {
-  private static int MAX_WIDTH = 180;
+  private static final int MAX_WIDTH = 180;
 
   int val;
-  TreeNode left;
-  TreeNode right;
+  public TreeNode left;
+  public TreeNode right;
 
-  TreeNode(int x) {
+  public TreeNode(int x) {
     val = x;
   }
 
@@ -112,9 +112,9 @@ public class TreeNode {
   public static String getTreeDisplay(TreeNode root) {
 
     StringBuilder sb = new StringBuilder();
-    List<List<String>> lines = new ArrayList<List<String>>();
-    List<TreeNode> level = new ArrayList<TreeNode>();
-    List<TreeNode> next = new ArrayList<TreeNode>();
+    List<List<String>> lines = new ArrayList<>();
+    List<TreeNode> level = new ArrayList<>();
+    List<TreeNode> next = new ArrayList<>();
 
     level.add(root);
     int nn = 1;
@@ -122,7 +122,7 @@ public class TreeNode {
 
     while (nn != 0) {
       nn = 0;
-      List<String> line = new ArrayList<String>();
+      List<String> line = new ArrayList<>();
       for (TreeNode n : level) {
         if (n == null) {
           line.add(null);
@@ -162,9 +162,9 @@ public class TreeNode {
           char c = ' ';
           if (j % 2 == 1) {
             if (line.get(j - 1) != null) {
-              c = (line.get(j) != null) ? '#' : '#';
+              c = '#';
             } else {
-              if (j < line.size() && line.get(j) != null) c = '#';
+              if (line.get(j) != null) c = '#';
             }
           }
           sb.append(c);
@@ -178,7 +178,7 @@ public class TreeNode {
             for (int k = 0; k < hpw; k++) {
               sb.append(j % 2 == 0 ? " " : "#");
             }
-            sb.append(j % 2 == 0 ? "#" : "#");
+            sb.append("#");
             for (int k = 0; k < hpw; k++) {
               sb.append(j % 2 == 0 ? "#" : " ");
             }
@@ -186,8 +186,7 @@ public class TreeNode {
         }
         sb.append('\n');
       }
-      for (int j = 0; j < line.size(); j++) {
-        String f = line.get(j);
+      for (String f : line) {
         if (f == null) f = "";
         int gap1 = (int) Math.ceil(perPiece / 2f - f.length() / 2f);
         int gap2 = (int) Math.floor(perPiece / 2f - f.length() / 2f);
