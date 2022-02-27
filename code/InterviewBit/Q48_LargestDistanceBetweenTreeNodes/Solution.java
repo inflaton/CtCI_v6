@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class Solution {
+
+  private int ans;
+
   private static class Digraph {
     private final int numberOfVertices;
     private final HashMap<Integer, ArrayList<Integer>> edges = new HashMap<>();
@@ -33,6 +36,47 @@ public class Solution {
   }
 
   public int solve(ArrayList<Integer> A) {
+    Digraph digraph = new Digraph(A.size());
+    int root = 0;
+    for (int i = 0; i < A.size(); i++) {
+      int parent = A.get(i);
+      if (parent >= 0) {
+        digraph.addEdge(parent, i);
+      } else {
+        root = i;
+      }
+    }
+
+    this.ans = 0;
+    dfs(digraph, root);
+    return ans;
+  }
+
+  private int dfs(Digraph digraph, int v) {
+    ArrayList<Integer> adjVertices = digraph.adj(v);
+    if (adjVertices == null) {
+      return 1;
+    }
+
+    int max1 = 0;
+    int max2 = 0;
+    for (Integer w : adjVertices) {
+      int height = dfs(digraph, w);
+      if (height > max1) {
+        max2 = max1;
+        max1 = height;
+      } else if (height > max2) {
+        max2 = height;
+      }
+    }
+
+    ans = Math.max(ans, max1 + max2);
+
+    return max1 + 1;
+  }
+
+  // my own attempt - Time Limit Exceeded
+  public int solve2(ArrayList<Integer> A) {
     Digraph digraph = new Digraph(A.size() + 1);
     final int start = A.size();
     boolean[] flags = new boolean[digraph.numberOfVertices];
@@ -74,11 +118,66 @@ public class Solution {
     return maxDepth;
   }
 
+  // By Shivam Tripathi
+  public int solve3(ArrayList<Integer> A) {
+    int n = A.size();
+    int root = 0;
+    ans = 0;
+
+    ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+
+    for (int i = 0; i < n; i++) {
+      adj.add(new ArrayList<>());
+    }
+
+    for (int i = 0; i < n; i++) {
+      if (A.get(i) == -1) {
+        root = i;
+      } else {
+        adj.get(A.get(i)).add(i);
+      }
+    }
+
+    dfs(root, adj);
+
+    return ans;
+  }
+
+  public int dfs(int v, ArrayList<ArrayList<Integer>> adj) {
+    if (adj.get(v).size() == 0) {
+      return 1;
+    }
+
+    int max1 = 0;
+    int max2 = 0;
+
+    for (int w : adj.get(v)) {
+      int height = dfs(w, adj);
+
+      if (height > max1) {
+        max2 = max1;
+        max1 = height;
+      } else if (height > max2) {
+        max2 = height;
+      }
+    }
+
+    ans = Math.max(ans, max1 + max2);
+
+    return max1 + 1;
+  }
+
   public static void main(String[] args) {
     Integer[] A = {-1, 0, 0, 0, 3};
     runTestCase(A, 3);
 
     A = new Integer[] {-1, 0, 0, 0, 3, 4};
+    runTestCase(A, 4);
+
+    A = new Integer[] {-1, 0, 0, 0, 3, 3};
+    runTestCase(A, 3);
+
+    A = new Integer[] {-1, 0, 0, 0, 3, 3, 4};
     runTestCase(A, 4);
   }
 
