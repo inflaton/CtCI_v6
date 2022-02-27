@@ -46,6 +46,9 @@ public class Solution {
     A = new Integer[] {1, 2, 3, 4, 5, 6};
     runTestCase(A);
 
+    A = new Integer[] {1, 2, 3, 4, 5, 6, 7};
+    runTestCase(A);
+
     A = new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
     runTestCase(A);
 
