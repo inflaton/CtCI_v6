@@ -35,38 +35,43 @@ public class Solution {
   public int solve(ArrayList<Integer> A) {
     Digraph digraph = new Digraph(A.size() + 1);
     final int start = A.size();
+    boolean[] flags = new boolean[digraph.numberOfVertices];
     for (int i = 0; i < A.size(); i++) {
-      digraph.addEdge(start, i);
       int parent = A.get(i);
       if (parent >= 0) {
         digraph.addEdge(i, parent);
         digraph.addEdge(parent, i);
+        flags[parent] = true;
+      }
+    }
+    for (int i = 0; i < A.size(); i++) {
+      if (!flags[i]) {
+        digraph.addEdge(start, i);
       }
     }
 
-    boolean[] onStack = new boolean[digraph.numberOfVertices];
-    int[] maxDepth = new int[digraph.numberOfVertices];
-    dfs(digraph, start, onStack, maxDepth, 0);
-    return Arrays.stream(maxDepth).max().orElse(0) - 1;
+    Arrays.fill(flags, false);
+    return dfs(digraph, start, flags, 0, 0) - 1;
   }
 
-  private void dfs(Digraph digraph, int v, boolean[] onStack, int[] maxDepth, int depth) {
+  private int dfs(Digraph digraph, int v, boolean[] onStack, int maxDepth, int depth) {
     if (onStack[v]) {
-      return;
+      return maxDepth;
     }
 
-    if (maxDepth[v] < depth) {
-      maxDepth[v] = depth;
+    if (maxDepth < depth) {
+      maxDepth = depth;
     }
 
     ArrayList<Integer> adjVertices = digraph.adj(v);
     if (adjVertices != null) {
       onStack[v] = true;
       for (Integer w : adjVertices) {
-        dfs(digraph, w, onStack, maxDepth, depth + 1);
+        maxDepth = dfs(digraph, w, onStack, maxDepth, depth + 1);
       }
       onStack[v] = false;
     }
+    return maxDepth;
   }
 
   public static void main(String[] args) {
