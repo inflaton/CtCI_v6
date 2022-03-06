@@ -3,10 +3,8 @@ package Q34_ShortestUniquePrefix;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Optional;
 
 public class Solution {
-  private static final int R = 256;
 
   private static class TrieNode {
     HashMap<Character, TrieNode> next = new HashMap<>();
