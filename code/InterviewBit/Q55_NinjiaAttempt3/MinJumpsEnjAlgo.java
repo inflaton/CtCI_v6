@@ -71,6 +71,12 @@ public class MinJumpsEnjAlgo {
   public static void main(String[] args) {
     Integer[] a = {1, 3, 5, 8, 10, 2, 6, 7, 6, 8, 9};
     runTestCase(a, 3);
+
+    a = new Integer[] {1, 1, 1, 1, 1, 1};
+    runTestCase(a, 5);
+
+    a = new Integer[] {1, 1, 1, 1, 1, 1, 2, 1, 3};
+    runTestCase(a, 7);
   }
 
   private static void runTestCase(Integer[] a, int expected) {
